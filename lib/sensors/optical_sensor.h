@@ -34,6 +34,8 @@ public:
 
         otos.setOffset(offset);
         otos.calibrateImu();
+        otos.setLinearScalar(0.9976f);
+        otos.setAngularScalar(0.9938f);
         otos.resetTracking();
 
         initialized = true;

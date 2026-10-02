@@ -35,11 +35,11 @@
 #define COMM_TX_PIN 2
 
 // Offsets
-#define OFF_1_X 3.875
-#define OFF_1_Y 4.955
+#define OFF_1_X -0.73
+#define OFF_1_Y -6.37
 #define OFF_1_H 0
 
-#define OFF_2_X -3.875
-#define OFF_2_Y 4.955
+#define OFF_2_X 0.73
+#define OFF_2_Y -6.37
 #define OFF_2_H 180
 
