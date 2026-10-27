@@ -1,9 +1,0 @@
-{
-    "name": "RS485comm",
-    "version": "1.0.0",
-    "include": "include",
-    "description": "Communication over RS485 in UART",
-    "keywords": ["RS485", "UART", "MAX3485", "esp32"],
-    "frameworks": ["arduino"],
-    "platforms": ["espressif32"]
-}

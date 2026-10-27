@@ -1,111 +1,29 @@
 #include <Arduino.h>
-#include <I2CUtils.h>
 #include <hw_config.h>
-#include <RS485comm.h>
-#include <TelemetryBus.h>
-#include "../lib/globals.h"
+#include "comms.h"
+#include "sensors.h"
 
-// Sensor Includes
-#include "../lib/sensors/color_sensor.h"
-#include "../lib/sensors/optical_sensor.h"
-
-// Processes
-#include "../lib/Telemetry/RS485Transciever.h"
-
-// statics and vars
-static uint32_t HEARTBEAT_INTERVAL_MS = 5000;
-uint32_t lastHeartbeat = 0;
-static std::vector<SensorBase*> activeSensors;
-
-// ---- Process Objects ----
-static RS485Transceiver rs485trx;
-
-static bool g_ready = false;
-
-static void bringUpCore() {
-  Serial.begin(baudrate);
-  delay(50);
-
-  RS485comm::begin(Serial1, baudrate);
-  RS485comm::enableRX();
-
-  I2CUtils::begin();
-  TelemetryBus::begin(256);
-
-  globals::reserveSensors(16);
-  Serial.println("Core Build. Awaiting INIT");
-}
-
-static void bringUpSensors() {
-  using namespace globals;
-
-  while (state != SystemState::RUNNING) {
-    Serial.println("Waiting for INIT");
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  }
-
-  Serial.println("Configuration Locked. Bring up Sensors");
-
-  // First pass: create + setup
-  for (auto &cfg : sensors) {
-    SensorBase* s = nullptr;
-
-    if (cfg.type == "COLOR") {
-      s = new ColorSensor(cfg.name.c_str(), cfg.port);
-    }
-    else if (cfg.type == "OPTICAL") {
-      if (cfg.name == "OPTL") {
-        s = new OpticalSensor(cfg.name.c_str(), cfg.port, offsets[0], offsets[1], offsets[2]);
-      } 
-      else if (cfg.name == "OPTR") {
-        s = new OpticalSensor(cfg.name.c_str(), cfg.port, offsets[3], offsets[4], offsets[5]);
-      }
-    }
-    else {
-      Serial.printf("Unknown sensor type: %s\n", cfg.type.c_str());
-      continue;
-    }
-
-    if (s == nullptr) {
-      Serial.printf("Failed to create sensor: %s\n", cfg.name.c_str());
-      continue;
-    }
-
-    s->setup();
-    activeSensors.push_back(s);
-
-    Serial.printf("Setup sensor: %s on port %u\n", cfg.name.c_str(), cfg.port);
-  }
-
-  // Second pass: start tasks only after all setups are done
-  for (auto *s : activeSensors) { //initing sensors AFTER making the list of sensors
-    s->startTask(10, 1);
-  }
-
-  Serial.println("All Sensors started!");
-}
-
-static void bringUpComms() {
-  rs485trx.setup();
-}
+static const uint32_t HEARTBEAT_INTERVAL_MS = 5000;
+static uint32_t lastHeartbeat = 0;
 
 void setup() {
-  bringUpCore();
-  bringUpComms();
+    Serial.begin(BAUDRATE);
+    delay(50);
 
-  Serial.println("System Online.");
+    commsBegin();
+    sensorsBegin();
 
-  bringUpSensors();
-
-  Serial.println("Sensors Initialized");
-  RS485comm::enableRX();
-  g_ready = true;
+    Serial.println("System Online.");
 }
 
 void loop() {
-  uint32_t now = millis();
-  if (now - lastHeartbeat >= HEARTBEAT_INTERVAL_MS) {
-    lastHeartbeat = now;
-    Serial.println("[HEARTBEAT] system posted!");
-  }
+    commsPoll();
+
+    uint32_t now = millis();
+    if (now - lastHeartbeat >= HEARTBEAT_INTERVAL_MS) {
+        lastHeartbeat = now;
+        Serial.println("[HEARTBEAT] system posted!");
+    }
+
+    delay(1);
 }
