@@ -11,21 +11,31 @@ char rxBuf[121];
 size_t rxLen = 0;
 bool inPacket = false;
 
+// Commands run locally (debug mode) reply to USB serial instead of the bus
+bool localCmd = false;
+
 void beginTx() {
+    if (localCmd) return;
     bus.flush();
     digitalWrite(RS485_EN_PIN, HIGH);
     delayMicroseconds(50); // transceiver settle
 }
 
 void endTx() {
+    if (localCmd) return;
     bus.flush(); // waits until the last byte has left the wire
     delayMicroseconds(30);
     digitalWrite(RS485_EN_PIN, LOW);
 }
 
 void writeLine(const char* s) {
+    if (localCmd) {
+        Serial.printf("[LOCAL TX] %s\n", s);
+        return;
+    }
     bus.print(s);
     bus.print("\r\n");
+    if (ARS2_DEBUG) Serial.printf("[TX] %s\n", s);
 }
 
 void reply(const char* s) {
@@ -56,12 +66,14 @@ void handleCommand(char* cmd) {
 
     for (char* p = cmd; *p; p++) *p = toupper((unsigned char)*p);
 
+    if (ARS2_DEBUG) Serial.printf("[%s] #%s\n", localCmd ? "LOCAL RX" : "RX", cmd);
+
     if (strstr(cmd, "DATA")) {
         sendData();
         return;
     }
 
-    Serial.printf("Received: %s\n", cmd);
+    if (!ARS2_DEBUG) Serial.printf("Received: %s\n", cmd);
 
     if (strstr(cmd, "<OFFS>")) {
         reply("<ACK><OFFS>(OK)<EOL>");
@@ -93,6 +105,14 @@ void commsBegin() {
     pinMode(RS485_EN_PIN, OUTPUT);
     digitalWrite(RS485_EN_PIN, LOW); // idle in receive mode
     bus.begin(BAUDRATE, SERIAL_8N1, RS485_RX_PIN, RS485_TX_PIN);
+}
+
+void commsRunLocal(const char* cmd) {
+    char buf[sizeof(rxBuf)];
+    strlcpy(buf, cmd, sizeof(buf));
+    localCmd = true;
+    handleCommand(buf);
+    localCmd = false;
 }
 
 void commsPoll() {

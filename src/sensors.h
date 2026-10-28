@@ -13,5 +13,8 @@ struct SensorReading {
 // Returns immediately; sensors come online over ~1.5 s (OTOS IMU calibration).
 void sensorsBegin();
 
+// True once every sensor has been brought up (found or not).
+bool sensorsReady();
+
 // Copies the latest readings into out.
 void sensorsSnapshot(SensorReading out[SENSOR_COUNT]);

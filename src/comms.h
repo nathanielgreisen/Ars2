@@ -14,5 +14,9 @@
 
 void commsBegin();
 
+// Runs a command (without the leading '#') as if the host sent it, but prints the
+// reply to USB serial instead of the bus. Used by debug mode.
+void commsRunLocal(const char* cmd);
+
 // Call often from loop(). Reads incoming bytes and answers complete requests.
 void commsPoll();

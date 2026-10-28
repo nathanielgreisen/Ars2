@@ -5,11 +5,11 @@
 // ---------------------------------------------------------------------------
 // Mux ports (TCA9548A channel 0-7) for each sensor
 // ---------------------------------------------------------------------------
-#define CS1_PORT  1   // color sensor 1
-#define CS2_PORT  2   // color sensor 2
+#define CS1_PORT  8   // color sensor 1
+#define CS2_PORT  9   // color sensor 2
 #define OPTL_PORT 3   // OTOS left
 #define OPTR_PORT 4   // OTOS right
-#define PNPT_PORT 5   // goBILDA Pinpoint
+#define PNPT_PORT 2   // goBILDA Pinpoint
 
 // ---------------------------------------------------------------------------
 // Sensor names (how each sensor is labeled in RS485 DATA replies)
@@ -26,7 +26,7 @@
 // I2C + TCA9548A mux
 #define I2C_SDA_PIN  5
 #define I2C_SCL_PIN  6
-#define I2C_FREQ_HZ  400000
+#define I2C_FREQ_HZ  100000  // Pinpoint channel has no pull-ups; 400 kHz drops most reads
 #define I2C_MUX_ADDR 0x70
 
 // RS485 transceiver on Serial1
@@ -58,6 +58,14 @@
 
 // How often all sensors are read
 #define SENSOR_PERIOD_MS 10
+
+// Debug mode: echoes every RS485 packet to USB serial, runs INIT once the sensors
+// are up, and prints a DATA packet every DEBUG_DATA_PERIOD_MS without a host.
+// Enable here or build the tasks_debug env (pio run -e tasks_debug).
+#ifndef ARS2_DEBUG
+#define ARS2_DEBUG 1
+#endif
+#define DEBUG_DATA_PERIOD_MS 500
 
 // Reserved for encoders (not used yet)
 #define ENC_CLK_PIN 9
