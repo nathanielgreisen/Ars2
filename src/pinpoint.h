@@ -28,6 +28,9 @@ public:
     // One bulk read of status + position. False on I2C error.
     bool read(Pose& out);
 
+    // Prints an already-read pose with units and CRLF; does not access I2C.
+    void print(const Pose& pose, Print& output = Serial) const;
+
 private:
     static const uint8_t ADDR = 0x31;
 

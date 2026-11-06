@@ -66,3 +66,12 @@ bool Pinpoint::read(Pose& out) {
     memcpy(&out.hRad, buf + 24, 4);
     return true;
 }
+
+void Pinpoint::print(const Pose& pose, Print& output) const {
+    char line[256];
+    snprintf(line, sizeof(line),
+             "[PNPT] x=%.2f mm y=%.2f mm h=%.2f deg (status=0x%02lx)\r\n",
+             pose.xMm, pose.yMm, pose.hRad * RAD_TO_DEG,
+             (unsigned long)pose.status);
+    output.print(line);
+}

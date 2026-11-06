@@ -7,9 +7,9 @@
 // ---------------------------------------------------------------------------
 #define CS1_PORT  8   // color sensor 1
 #define CS2_PORT  9   // color sensor 2
-#define OPTL_PORT 3   // OTOS left
-#define OPTR_PORT 4   // OTOS right
-#define PNPT_PORT 2   // goBILDA Pinpoint
+#define OPTL_PORT 0   // OTOS left
+#define OPTR_PORT 1   // OTOS right
+#define PNPT_PORT 3   // goBILDA Pinpoint
 
 // ---------------------------------------------------------------------------
 // Sensor names (how each sensor is labeled in RS485 DATA replies)

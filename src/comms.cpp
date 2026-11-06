@@ -30,12 +30,12 @@ void endTx() {
 
 void writeLine(const char* s) {
     if (localCmd) {
-        Serial.printf("[LOCAL TX] %s\n", s);
+        Serial.printf("[LOCAL TX] %s\r\n", s);
         return;
     }
     bus.print(s);
     bus.print("\r\n");
-    if (ARS2_DEBUG) Serial.printf("[TX] %s\n", s);
+    if (ARS2_DEBUG) Serial.printf("[TX] %s\r\n", s);
 }
 
 void reply(const char* s) {
@@ -66,14 +66,14 @@ void handleCommand(char* cmd) {
 
     for (char* p = cmd; *p; p++) *p = toupper((unsigned char)*p);
 
-    if (ARS2_DEBUG) Serial.printf("[%s] #%s\n", localCmd ? "LOCAL RX" : "RX", cmd);
+    if (ARS2_DEBUG) Serial.printf("[%s] #%s\r\n", localCmd ? "LOCAL RX" : "RX", cmd);
 
     if (strstr(cmd, "DATA")) {
         sendData();
         return;
     }
 
-    if (!ARS2_DEBUG) Serial.printf("Received: %s\n", cmd);
+    if (!ARS2_DEBUG) Serial.printf("Received: %s\r\n", cmd);
 
     if (strstr(cmd, "<OFFS>")) {
         reply("<ACK><OFFS>(OK)<EOL>");

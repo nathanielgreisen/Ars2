@@ -86,7 +86,7 @@ bool beginPinpoint() {
 }
 
 void report(int i, const char* name) {
-    Serial.printf("[%s] port %u: %s\n", name, PORTS[i], online[i] ? "OK" : "NOT FOUND");
+    Serial.printf("[%s] port %u: %s\r\n", name, PORTS[i], online[i] ? "OK" : "NOT FOUND");
 }
 
 // Debug mode: Pinpoint read success counts, printed once a second
@@ -98,20 +98,24 @@ void pinpointStats() {
     uint32_t now = millis();
     if (now - last < 1000) return;
     last = now;
-    Serial.printf("[%s] reads ok=%lu fail=%lu\n", PNPT_NAME, (unsigned long)pnptOk, (unsigned long)pnptFail);
+    Serial.printf("[%s] reads ok=%lu fail=%lu\r\n", PNPT_NAME, (unsigned long)pnptOk, (unsigned long)pnptFail);
     pnptOk = pnptFail = 0;
 #endif
 }
 
-// Debug mode: says why the Pinpoint isn't publishing, at most once a second
-void pinpointDebug(const char* why, uint32_t status = 0) {
+// Stop publishing the cached pose after a failed read. In debug mode, also
+// report the reason at most once a second. A subsequent good read restores it.
+void pinpointUnavailable(const char* why, uint32_t status = 0) {
+    portENTER_CRITICAL(&latestLock);
+    latest[PNPT].valid = false;
+    portEXIT_CRITICAL(&latestLock);
 #if ARS2_DEBUG
     pnptFail++;
     static uint32_t last = 0;
     uint32_t now = millis();
     if (now - last < 1000) return;
     last = now;
-    Serial.printf("[%s] %s (status=0x%02lx)\n", PNPT_NAME, why, (unsigned long)status);
+    Serial.printf("[%s] %s (status=0x%02lx)\r\n", PNPT_NAME, why, (unsigned long)status);
 #endif
 }
 
@@ -124,24 +128,33 @@ void readPinpoint() {
         if (millis() - lastRetry < 1000) return;
         lastRetry = millis();
         online[PNPT] = beginPinpoint();
-        if (!online[PNPT]) { pinpointDebug("not found on I2C"); return; }
+        if (!online[PNPT]) { pinpointUnavailable("not found on I2C"); return; }
         report(PNPT, PNPT_NAME);
     }
-    if (!selectPort(PORTS[PNPT])) { pinpointDebug("mux select failed"); return; }
+    if (!selectPort(PORTS[PNPT])) { pinpointUnavailable("mux select failed"); return; }
 
     Pinpoint::Pose pose;
-    if (!pinpoint.read(pose)) { pinpointDebug("bulk read failed"); return; }
+    if (!pinpoint.read(pose)) { pinpointUnavailable("bulk read failed"); return; }
     if (!(pose.status & Pinpoint::READY)) {
         // 0x02 calibrating, 0x04/0x08/0x0C X/Y/both pods not detected, 0x10 IMU runaway
-        pinpointDebug("not READY", pose.status);
+        pinpointUnavailable("not READY", pose.status);
         return;
     }
     if (isnan(pose.xMm) || isnan(pose.yMm) || isnan(pose.hRad)) {
-        pinpointDebug("NaN pose", pose.status);
+        pinpointUnavailable("NaN pose", pose.status);
         return;
     }
 
     pnptOk++;
+
+#if ARS2_DEBUG
+    static uint32_t lastPosePrint = 0;
+    const uint32_t now = millis();
+    if (now - lastPosePrint >= DEBUG_DATA_PERIOD_MS) {
+        lastPosePrint = now;
+        pinpoint.print(pose);
+    }
+#endif
 
     // Same units as the OTOS: inches * 100 and degrees
     publish(PNPT, (int32_t)(pose.xMm / 25.4f * 100.0f), (int32_t)(pose.yMm / 25.4f * 100.0f),
