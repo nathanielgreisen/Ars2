@@ -58,14 +58,18 @@
 
 // How often all sensors are read
 #define SENSOR_PERIOD_MS 10
+#define SENSOR_READING_TIMEOUT_MS 250
+#define SENSOR_RESET_SETTLE_MS 250
+#define PINPOINT_READY_TIMEOUT_MS 2000
 
-// Debug mode: echoes every RS485 packet to USB serial, runs INIT once the sensors
-// are up, and prints a DATA packet every DEBUG_DATA_PERIOD_MS without a host.
+// Debug mode: echoes RS485 packets and prints DATA without sending a reset.
+// Pose diagnostics include precise readings, timestamps, and read failure counts.
 // Enable here or build the tasks_debug env (pio run -e tasks_debug).
 #ifndef ARS2_DEBUG
 #define ARS2_DEBUG 1
 #endif
 #define DEBUG_DATA_PERIOD_MS 500
+#define DEBUG_POSE_PERIOD_MS 1000
 
 // Reserved for encoders (not used yet)
 #define ENC_CLK_PIN 9

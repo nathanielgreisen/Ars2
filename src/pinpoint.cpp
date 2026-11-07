@@ -34,8 +34,7 @@ bool Pinpoint::readRegs(uint8_t reg, void* out, size_t len) {
     Wire.write(reg);
     if (Wire.endTransmission() != 0) return false;
     if (Wire.requestFrom(ADDR, len) != len) return false;
-    Wire.readBytes(static_cast<uint8_t*>(out), len);
-    return true;
+    return Wire.readBytes(static_cast<uint8_t*>(out), len) == len;
 }
 
 bool Pinpoint::begin(float ticksPerMm, float xPodOffsetMm, float yPodOffsetMm,

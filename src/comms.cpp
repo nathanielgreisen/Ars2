@@ -85,9 +85,26 @@ void handleCommand(char* cmd) {
     }
 
     if (strstr(cmd, "INIT")) {
-        char resp[48];
-        snprintf(resp, sizeof(resp), "<ACK><INIT>(ADDED=%u,BAD=0)<EOL>", (unsigned)SENSOR_COUNT);
-        reply(resp);
+        sensorsRequestReset();
+        reply("<ACK><INIT>(RESET=PENDING)<EOL>");
+        return;
+    }
+
+    // Polling does not enqueue another calibration. Missing sensors are reported
+    // individually; a working sensor can still provide data after the reset.
+    if (strstr(cmd, "RSET")) {
+        const auto status = sensorsResetStatus();
+        if (status.state == ResetState::Complete) {
+            char resp[80];
+            snprintf(resp, sizeof(resp),
+                     "<ACK><RSET>(DONE,OPTL=%u,OPTR=%u,PNPT=%u)<EOL>",
+                     status.optL, status.optR, status.pinpoint);
+            reply(resp);
+        } else if (status.state == ResetState::Idle) {
+            reply("<ACK><RSET>(NOT_REQUESTED)<EOL>");
+        } else {
+            reply("<ACK><RSET>(PENDING)<EOL>");
+        }
         return;
     }
 

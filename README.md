@@ -14,5 +14,14 @@ Everything is fixed at compile time. Pins, mux ports, sensor names and OTOS offs
 
 Build and flash the `tasks_debug` env (`pio run -e tasks_debug -t upload`), or set `ARS2_DEBUG` to 1 in
 `hw_config.h`. Every RS485 packet in and out is echoed to USB serial (`[RX]` / `[TX]`). Once the sensors
-are up the board runs INIT itself, then prints a DATA packet every `DEBUG_DATA_PERIOD_MS`. These
+are up the board prints a DATA packet every `DEBUG_DATA_PERIOD_MS`. These
 self-run commands are tagged `[LOCAL RX]` / `[LOCAL TX]` and are never sent on the bus.
+
+Host `INIT` now queues a fresh calibration and tracking reset on the sensor task.
+Keep the robot flat and stationary. The host polls `RSET` until all reset work is
+complete; each sensor's result is reported separately. Debug polling only requests
+DATA and never requests INIT/reset. Missing, failed, and expired readings are
+omitted rather than repeatedly publishing a cached pose.
+
+See [the reset/drift test procedure](test/ODOMETRY_CHECK.md) for upload steps,
+timestamped serial capture, expected startup messages, and information to collect.

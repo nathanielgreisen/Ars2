@@ -3,6 +3,15 @@
 
 constexpr size_t SENSOR_COUNT = 5;
 
+enum class ResetState { Idle, Pending, Running, Complete };
+
+struct SensorResetStatus {
+    ResetState state = ResetState::Idle;
+    bool optL = false;
+    bool optR = false;
+    bool pinpoint = false;
+};
+
 struct SensorReading {
     const char* name;
     int32_t a, b, c;   // color: R, G, B   optical/pinpoint: x*100 (in), y*100 (in), heading (deg)
@@ -18,3 +27,8 @@ bool sensorsReady();
 
 // Copies the latest readings into out.
 void sensorsSnapshot(SensorReading out[SENSOR_COUNT]);
+
+// Queues calibration + tracking reset on the I2C-owning sensor task.
+// Repeated requests while pending/running are coalesced. Keep the robot still.
+void sensorsRequestReset();
+SensorResetStatus sensorsResetStatus();

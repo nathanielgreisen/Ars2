@@ -7,17 +7,11 @@ static const uint32_t HEARTBEAT_INTERVAL_MS = 5000;
 static uint32_t lastHeartbeat = 0;
 
 #if ARS2_DEBUG
-// Debug mode: INIT once the sensors are up, then print DATA periodically
+// Debug polling must never reset the sensors or interfere with host INIT.
 static void debugPoll() {
-    static bool initDone = false;
     static uint32_t lastData = 0;
 
     if (!sensorsReady()) return;
-
-    if (!initDone) {
-        initDone = true;
-        commsRunLocal("INIT");
-    }
 
     uint32_t now = millis();
     if (now - lastData >= DEBUG_DATA_PERIOD_MS) {
