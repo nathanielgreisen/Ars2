@@ -1,0 +1,162 @@
+[SCAN] main bus: 0x31
+[SCAN] port 0:
+[SCAN] port 1:
+[SCAN] port 2: 0x31
+[SCAN] port 3: 0x17
+[SCAN] port 4: 0x17
+[SCAN] port 5:
+[SCAN] port 6:
+[SCAN] port 7:
+[CS1] port 8: NOT FOUND
+[CS2] port 9: NOT FOUND
+[OPTL] port 3: OK
+[OPTR] port 4: OK
+[PNPT] port 2: OK
+[LOCAL RX] #INIT
+[LOCAL TX] <ACK><INIT>(ADDED=5,BAD=0)<EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=0 fail=0
+[PNPT] not READY (status=0x02)
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=82 fail=19
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[HEARTBEAT] system posted!
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[HEARTBEAT] system posted!
+[SCAN] main bus:
+[SCAN] port 0:
+[SCAN] port 1:[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+
+[SCAN] port 2: 0x31
+[SCAN] port 3: 0x17
+[SCAN] port 4: 0x17
+[SCAN] port 5:
+[SCAN] port 6:
+[SCAN] port 7:
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[LOCAL RX] #DATA
+[LOCAL TX] <ACK><DATA>
+[LOCAL TX] OPTL(+0, +0, +0)<$>
+[LOCAL TX] OPTR(+0, +0, +0)<$>
+[LOCAL TX] PNPT(+0, +0, +0)<$>
+[LOCAL TX] <EOL>
+[PNPT] reads ok=100 fail=0

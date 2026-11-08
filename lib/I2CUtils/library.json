@@ -1,9 +1,0 @@
-{
-    "name": "I2Cutils",
-    "version": "1.0.0",
-    "include": "include",
-    "description": "Thread-safe I2C + Mux utlities for S3",
-    "keywords": ["i2c", "mutex", "tca95481", "multiplexer", "esp32"],
-    "frameworks": ["arduino"],
-    "platforms": ["espressif32"]
-}
