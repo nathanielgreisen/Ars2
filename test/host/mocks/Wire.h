@@ -5,6 +5,9 @@ inline bool mockPinMissing = false, mockPinNeverReady = false, mockShortRead = f
 inline uint32_t mockPinResetAt = 0;
 inline unsigned mockPinResets = 0;
 inline uint8_t mockSelectedPort = 0;
+inline float mockPinConfig[3] = {}; // Ticks/mm, X offset, Y offset.
+inline uint32_t mockPinDirections = 0;
+inline float mockPinPose[3] = {}; // X mm, Y mm, heading radians.
 
 class TwoWire {
     uint8_t address = 0, reg = 0;
@@ -22,10 +25,20 @@ public:
         if (address == 0x31) {
             if (mockPinMissing) return 1;
             reg = written[0];
-            if (reg == 4 && written.size() == 5) {
-                uint32_t control;
-                std::memcpy(&control, written.data() + 1, 4);
-                if (control == 2) { mockPinResetAt = millis(); ++mockPinResets; }
+            if (written.size() == 5) {
+                if (reg >= 14 && reg <= 16) {
+                    std::memcpy(&mockPinConfig[reg - 14], written.data() + 1, 4);
+                } else if (reg == 4) {
+                    uint32_t control;
+                    std::memcpy(&control, written.data() + 1, 4);
+                    if (control == 2) {
+                        mockPinResetAt = millis();
+                        ++mockPinResets;
+                        std::memset(mockPinPose, 0, sizeof(mockPinPose));
+                    } else {
+                        mockPinDirections = control;
+                    }
+                }
             }
         }
         return 0;
@@ -33,7 +46,10 @@ public:
     size_t requestFrom(uint8_t, size_t length) {
         std::memset(received, 0, sizeof(received));
         uint32_t value = 1;
-        if (reg == 18) value = mockPinNeverReady || millis() - mockPinResetAt < 250 ? 2 : 1;
+        if (reg == 18) {
+            value = mockPinNeverReady || millis() - mockPinResetAt < 250 ? 2 : 1;
+            std::memcpy(received + 16, mockPinPose, sizeof(mockPinPose));
+        }
         std::memcpy(received, &value, 4);
         return length;
     }

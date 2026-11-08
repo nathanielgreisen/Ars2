@@ -40,6 +40,19 @@ int main() {
     assert(mockPinResets == 1); // Polling completion never resets again.
     assert(Serial.text.find("(DONE,OPTL=1,OPTR=1,PNPT=1)") != std::string::npos);
     assert(mockOpticals[0].offset.y == OPTL_OFF_Y && mockOpticals[1].offset.h == OPTR_OFF_H);
+    assert(mockPinConfig[0] == PNPT_TICKS_PER_MM);
+    assert(std::abs(mockPinConfig[1] + 165.1f) < 0.001f);
+    assert(std::abs(mockPinConfig[2] - 165.1f) < 0.001f);
+    assert(mockPinDirections == ((1u << 5) | (1u << 2))); // X forward, Y reversed.
+
+    // A Pinpoint pose right and forward of reset is sent as right and back.
+    mockPinPose[0] = 4.0f * 25.4f;
+    mockPinPose[1] = 8.0f * 25.4f;
+    mockPinPose[2] = 30.5f / RAD_TO_DEG;
+    readPinpoint();
+    sensorsSnapshot(readings);
+    assert(readings[PNPT].valid && readings[PNPT].a == 400
+           && readings[PNPT].b == -800 && readings[PNPT].c == 30);
 
     mockOpticals[0].readFails = true;
     readOptical(optL, OPTL);
@@ -112,5 +125,6 @@ int main() {
     sensorsSnapshot(readings);
     assert(!readings[OPTL].valid);
     std::cout << "PASS: queued reset, I2C ownership, duplicate requests, polling, "
-                 "zero origin, calibration/reset failures, READY timeout, stale readings, recovery\n";
+                 "zero origin, Pinpoint configuration and pose, calibration/reset failures, "
+                 "READY timeout, stale readings, recovery\n";
 }

@@ -42,15 +42,14 @@ bool Pinpoint::begin(float ticksPerMm, float xPodOffsetMm, float yPodOffsetMm,
     uint32_t id;
     if (!readRegs(DEVICE_ID, &id, 4)) return false;
 
-    uint32_t xDir = xReversed ? X_REVERSED : X_FORWARD;
-    uint32_t yDir = yReversed ? Y_REVERSED : Y_FORWARD;
-    uint32_t reset = RESET_POS_AND_IMU;
+    const uint32_t directions = (xReversed ? X_REVERSED : X_FORWARD)
+                              | (yReversed ? Y_REVERSED : Y_FORWARD);
+    const uint32_t reset = RESET_POS_AND_IMU;
 
     return writeReg(TICKS_PER_MM, &ticksPerMm)
         && writeReg(X_POD_OFFSET, &xPodOffsetMm)
         && writeReg(Y_POD_OFFSET, &yPodOffsetMm)
-        && writeReg(DEVICE_CONTROL, &xDir)
-        && writeReg(DEVICE_CONTROL, &yDir)
+        && writeReg(DEVICE_CONTROL, &directions)
         && writeReg(DEVICE_CONTROL, &reset);
 }
 

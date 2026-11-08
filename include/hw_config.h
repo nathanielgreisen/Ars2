@@ -35,26 +35,27 @@
 #define RS485_TX_PIN 2
 
 // Optical odometry (SparkFun OTOS) mounting offsets (in, in, deg)
-#define OPTL_OFF_X -0.73f
-#define OPTL_OFF_Y -6.37f
+#define OPTL_OFF_X -6.37f
+#define OPTL_OFF_Y -0.73f
 #define OPTL_OFF_H 0.0f
 
-#define OPTR_OFF_X 0.73f
-#define OPTR_OFF_Y -6.37f
+#define OPTR_OFF_X -6.37f
+#define OPTR_OFF_Y 0.73f
 #define OPTR_OFF_H 180.0f
 
 #define OTOS_LINEAR_SCALAR  0.9976f
 #define OTOS_ANGULAR_SCALAR 0.9938f
 
 // goBILDA Pinpoint
-// Ticks per mm: 4-bar pod = 19.89436789, swingarm pod = 13.26291192
-#define PNPT_TICKS_PER_MM 19.89436789f
-// X pod offset: how far left of center the forward-tracking pod is (mm, left +)
-// Y pod offset: how far forward of center the strafe-tracking pod is (mm, forward +)
-#define PNPT_X_POD_OFFSET_MM 0.0f
-#define PNPT_Y_POD_OFFSET_MM 0.0f
+// Direct-drive REV Through Bore encoders with 2-inch tracking wheels.
+// Counts per revolution / tracking wheel circumference in mm.
+#define PNPT_TICKS_PER_MM (8192.0f / (3.14159265f * 2.0f * 25.4f))
+// With the current wiring, Pinpoint's X axis is robot right and its Y axis
+// is robot forward. Each register measures its pod's offset on the other axis.
+#define PNPT_X_POD_OFFSET_MM (-6.5f * 25.4f) // Lateral pod behind center (-Y).
+#define PNPT_Y_POD_OFFSET_MM (6.5f * 25.4f)  // Longitudinal pod right of center (+X).
 #define PNPT_X_REVERSED false
-#define PNPT_Y_REVERSED false
+#define PNPT_Y_REVERSED true
 
 // How often all sensors are read
 #define SENSOR_PERIOD_MS 10

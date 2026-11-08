@@ -157,6 +157,8 @@ bool beginPinpoint() {
         unavailable(PNPT, "configuration/reset write failed");
         return false;
     }
+    Serial.printf("[PNPT] config ticks_per_mm=%.3f x_offset_mm=%.1f y_offset_mm=%.1f\r\n",
+                  PNPT_TICKS_PER_MM, PNPT_X_POD_OFFSET_MM, PNPT_Y_POD_OFFSET_MM);
     // A successful write starts calibration; it does not mean calibration is done.
     const uint32_t started = millis();
     delay(20);
@@ -192,7 +194,9 @@ void readPinpoint() {
         unavailable(PNPT, "not READY or non-finite pose", int(pose.status));
         return;
     }
-    publishPose(PNPT, pose.xMm / 25.4f, pose.yMm / 25.4f, pose.hRad * RAD_TO_DEG);
+    // Pinpoint integrates right/forward with positive CCW yaw. The V5 wire
+    // convention for PNPT is right/back at reset, so negate Y after integration.
+    publishPose(PNPT, pose.xMm / 25.4f, -pose.yMm / 25.4f, pose.hRad * RAD_TO_DEG);
 }
 
 void initializePoseSensors() {
